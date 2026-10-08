@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#FFFDF9">
+<title>ことたま名前鑑定 — 名前の音から、あなたを知る</title>
+<meta name="description" content="日本語の一音一音に宿る意味から、あなたの名前を読み解く名前鑑定です。ひらがなで名前を入れるだけで、音の意味の一部をその場で体験できます。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ことたま名前鑑定 — 名前の音から、あなたを知る">
+<meta property="og:description" content="日本語の一音一音に宿る意味から、あなたの名前を読み解く名前鑑定です。名前を入れて、音の意味の一部をその場で体験できます。">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FFFDF9;
+    --paper-warm:#FBF4EF;
+    --blush:#F7E8E4;
+    --beni:#A71D34;
+    --beni-deep:#7A1428;
+    --kin:#B38B3F;
+    --kin-soft:#DCC593;
+    --sumi:#2B2224;
+    --sumi-soft:#5F5254;
+    --rule:#E8D8CF;
+    --mincho:"Shippori Mincho B1","Shippori Mincho","Yu Mincho","Hiragino Mincho ProN","Noto Serif JP","Noto Serif CJK JP",serif;
+    --gothic:"Zen Kaku Gothic New","Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic",sans-serif;
+    --grain:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .45 0 0 0 0 .28 0 0 0 0 .24 0 0 0 .07 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{
+    -webkit-text-size-adjust:100%;
+    scroll-behavior:smooth;
+    scroll-padding-top:env(safe-area-inset-top,0px);
+  }
+  body{
+    font-family:var(--gothic);
+    font-size:16px;
+    line-height:2;
+    letter-spacing:.04em;
+    color:var(--sumi);
+    background:var(--paper);
+    background-image:var(--grain);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+    overflow-x:hidden;
+    font-feature-settings:"palt" 0;
+  }
+  img,svg{max-width:100%}
+  a{color:inherit}
+  :focus-visible{outline:2px solid var(--kin);outline-offset:3px}
+
+  .wrap{width:min(100% - 48px, 36rem);margin-inline:auto}
+  .ph{display:inline-block}
+
+  /* 見出し：下に水引の細い二本線 */
+  .sec{padding:88px 0}
+  .sec h2{
+    font-family:var(--mincho);
+    font-weight:700;
+    font-size:clamp(22px,5.6vw,28px);
+    line-height:1.6;
+    letter-spacing:.08em;
+    color:var(--sumi);
+  }
+  .sec h2::after{
+    content:"";
+    display:block;
+    width:46px;height:5px;
+    margin-top:18px;
+    background:linear-gradient(to bottom,var(--beni) 0 1.5px,transparent 1.5px 3.5px,var(--kin) 3.5px 5px);
+  }
+  .sec p + p{margin-top:1.1em}
+  .lead{margin-top:28px}
+
+  /* ボタン */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;
+    min-height:54px;padding:12px 30px;
+    font-family:var(--mincho);font-weight:700;font-size:17px;letter-spacing:.1em;
+    color:var(--paper);background:var(--beni);
+    border:1px solid var(--beni);border-radius:3px;
+    text-decoration:none;cursor:pointer;
+    box-shadow:inset 0 0 0 3px var(--beni), inset 0 0 0 4px rgba(220,197,147,.75);
+    transition:background-color .2s ease;
+  }
+  .btn:hover{background:var(--beni-deep);box-shadow:inset 0 0 0 3px var(--beni-deep), inset 0 0 0 4px rgba(220,197,147,.75)}
+  .btn-ghost{color:var(--beni);background:transparent;box-shadow:none}
+  .btn-ghost:hover{background:rgba(167,29,52,.06);box-shadow:none}
+  .btn-wide{width:100%}
+  .btn-note{margin-top:12px;font-size:13.5px;line-height:1.8;color:var(--sumi-soft);text-align:center}
+
+  /* ───────── ヒーロー（熨斗紙） ───────── */
+  .hero{
+    min-height:100svh;
+    display:flex;flex-direction:column;align-items:center;
+    padding:calc(env(safe-area-inset-top,0px) + 44px) 24px 56px;
+    text-align:center;
+  }
+  .hero h1{
+    font-family:var(--mincho);
+    font-weight:800;
+    font-size:clamp(29px,8vw,46px);
+    line-height:1.4;
+    letter-spacing:.12em;
+    padding-left:.12em;
+    white-space:nowrap;
+    color:var(--beni);
+  }
+  .hero-sub{
+    margin-top:14px;
+    font-family:var(--mincho);
+    font-weight:600;
+    font-size:clamp(14px,3.9vw,16px);line-height:1.9;letter-spacing:.16em;
+    color:var(--sumi-soft);
+  }
+  .cord{
+    position:relative;
+    width:100vw;
+    height:180px;
+    margin:22px 0 10px;
+    display:grid;place-items:center;
+  }
+  .cord-band{
+    position:absolute;left:0;right:0;top:50%;
+    height:13px;transform:translateY(-50%);
+    background:linear-gradient(to bottom,
+      var(--beni) 0 2px, var(--paper) 2px 4px, var(--beni) 4px 5.8px,
+      var(--kin) 5.8px 7.2px, var(--beni) 7.2px 9px, var(--paper) 9px 11px,
+      var(--beni) 11px 13px);
+    transform-origin:center;
+  }
+  .bow{position:relative;width:220px;height:180px;overflow:visible}
+  .bow .k1{fill:none;stroke:var(--beni);stroke-width:13;stroke-linecap:round;stroke-linejoin:round}
+  .bow .k2{fill:none;stroke:var(--paper);stroke-width:9;stroke-linecap:round;stroke-linejoin:round}
+  .bow .k3{fill:none;stroke:var(--beni);stroke-width:5.4;stroke-linecap:round;stroke-linejoin:round}
+  .bow .k4{fill:none;stroke:var(--kin);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+  .bow .knot{fill:var(--beni);stroke:var(--kin);stroke-width:1.6}
+
+  .hero-copy-box{display:flex;justify-content:center;margin-top:8px}
+  .hero-copy{
+    writing-mode:vertical-rl;
+    font-family:var(--mincho);
+    font-weight:600;
+    font-size:clamp(25px,6.6vw,40px);
+    line-height:1.85;
+    letter-spacing:.16em;
+    color:var(--sumi);
+    text-align:start;
+  }
+  .hero-copy span{display:block}
+  .hero-copy span:nth-child(2){padding-top:1em}
+  .hero-copy span:nth-child(3){padding-top:2em}
+
+  @media (prefers-reduced-motion:no-preference){
+    .cord-band{animation:tie .9s cubic-bezier(.3,.7,.2,1) both}
+    .bow{animation:bow-in .7s .55s cubic-bezier(.2,.8,.3,1) both}
+    .hero-copy-box{animation:soft-in 1s .9s ease both}
+    @keyframes tie{from{transform:translateY(-50%) scaleX(0)}to{transform:translateY(-50%) scaleX(1)}}
+    @keyframes bow-in{from{opacity:0;transform:scale(.86)}to{opacity:1;transform:scale(1)}}
+    @keyframes soft-in{from{opacity:0}to{opacity:1}}
+  }
+
+  /* ───────── 体験 ───────── */
+  .trial{background-color:var(--blush);background-image:var(--grain)}
+  .trial-box{
+    margin-top:32px;
+    padding:24px 20px 22px;
+    background:var(--paper);
+    border:1px solid var(--rule);
+    border-radius:4px;
+  }
+  .trial-box label{
+    display:block;
+    font-family:var(--mincho);font-weight:700;font-size:15px;letter-spacing:.1em;
+    margin-bottom:10px;
+  }
+  .trial-row{display:flex;gap:10px;flex-wrap:wrap}
+  .trial-row input{
+    flex:1 1 200px;min-width:0;
+    min-height:54px;padding:10px 16px;
+    font-family:var(--mincho);font-size:20px;letter-spacing:.14em;
+    color:var(--sumi);background:var(--paper);
+    border:1px solid var(--kin-soft);border-radius:3px;
+  }
+  .trial-row input::placeholder{color:#B9A9A3;letter-spacing:.06em;font-size:16px}
+  .trial-row input:focus{outline:2px solid var(--kin);outline-offset:1px;border-color:var(--kin)}
+  .trial-row .btn{flex:0 0 auto}
+  .trial-hint{margin-top:12px;font-size:13.5px;line-height:1.8;color:var(--sumi-soft)}
+  .trial-error{margin-top:10px;font-size:14px;line-height:1.8;color:var(--beni);font-weight:500}
+  .trial-error:empty{display:none}
+
+  .result{margin-top:40px}
+  .result[hidden]{display:none}
+  .result-name{
+    font-family:var(--mincho);font-weight:700;
+    font-size:clamp(20px,5.2vw,24px);letter-spacing:.12em;
+    text-align:center;
+  }
+  .result-name small{display:block;font-size:13px;letter-spacing:.14em;color:var(--sumi-soft);font-weight:500}
+  .fuda-scroll{
+    margin:22px -24px 0;
+    padding:6px 24px 18px;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:thin;
+  }
+  .fuda-row{
+    list-style:none;
+    display:flex;gap:10px;
+    width:max-content;
+    margin-inline:auto;
+  }
+  .fuda{
+    width:80px;
+    display:flex;flex-direction:column;align-items:center;
+    padding:16px 6px 20px;
+    background:var(--paper);
+    border:1px solid var(--beni);
+    border-radius:2px;
+    box-shadow:inset 0 0 0 3px var(--paper), inset 0 0 0 4px var(--kin-soft), 0 1px 0 rgba(122,20,40,.08);
+  }
+  .fuda-kana{
+    font-family:var(--mincho);font-weight:700;
+    font-size:36px;line-height:1.2;color:var(--beni);
+  }
+  .fuda-mark{
+    min-height:1.4em;
+    margin-top:4px;
+    font-size:11px;line-height:1.4;letter-spacing:.1em;color:var(--kin);font-weight:700;
+  }
+  .fuda-words{
+    margin-top:12px;
+    padding-top:14px;
+    border-top:1px solid var(--kin-soft);
+    writing-mode:vertical-rl;
+    text-orientation:mixed;
+    font-family:var(--mincho);font-weight:600;
+    font-size:15px;line-height:1.7;letter-spacing:.12em;
+    color:var(--sumi);
+  }
+  .fuda-words span{display:block;white-space:nowrap}
+  .fuda-words span + span{margin-block-start:.35em}
+  @media (prefers-reduced-motion:no-preference){
+    .fuda{animation:fuda-in .5s cubic-bezier(.2,.75,.25,1) both;animation-delay:calc(var(--i) * 80ms)}
+    @keyframes fuda-in{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:none}}
+  }
+  .fuda-legend{margin-top:6px;font-size:13px;line-height:1.85;color:var(--sumi-soft)}
+  .fuda-legend:empty{display:none}
+  .result-next{
+    margin-top:28px;
+    padding-top:26px;
+    border-top:1px solid var(--rule);
+  }
+  .result-next .btn{margin-top:22px}
+
+  /* ───────── はじまり ───────── */
+  .story .lead{margin-top:30px}
+  .story .big{
+    margin:1.6em 0 !important;
+    font-family:var(--mincho);font-weight:700;
+    font-size:clamp(19px,5vw,22px);line-height:1.8;letter-spacing:.06em;
+    color:var(--beni);
+  }
+
+  /* ───────── 想い（紅の帯） ───────── */
+  .message{
+    background:var(--beni-deep);
+    color:var(--paper);
+    text-align:center;
+    position:relative;
+  }
+  .message::before,.message::after{
+    content:"";position:absolute;left:0;right:0;height:5px;
+    background:linear-gradient(to bottom,var(--kin) 0 1.5px,transparent 1.5px 3.5px,var(--kin) 3.5px 5px);
+    opacity:.8;
+  }
+  .message::before{top:14px}
+  .message::after{bottom:14px}
+  .message p{
+    font-family:var(--mincho);font-weight:500;
+    font-size:clamp(16.5px,4.4vw,18.5px);line-height:2.15;letter-spacing:.08em;
+  }
+  .message p + p{margin-top:1.6em}
+  .message .gift{
+    font-weight:700;
+    font-size:clamp(20px,5.6vw,26px);
+    line-height:1.9;
+    color:#FFF6EA;
+  }
+  .message .sign{margin-top:2.4em !important;font-size:15px;letter-spacing:.3em;color:var(--kin-soft)}
+
+  /* ───────── 本編 ───────── */
+  .points{list-style:none;margin-top:30px}
+  .points li{padding:26px 0;border-top:1px solid var(--rule)}
+  .points li:last-child{border-bottom:1px solid var(--rule)}
+  .points h3{
+    font-family:var(--mincho);font-weight:700;
+    font-size:19px;line-height:1.7;letter-spacing:.06em;color:var(--beni);
+    margin-bottom:8px;
+  }
+
+  /* ───────── 料金 ───────── */
+  .price{background:var(--paper-warm);background-image:var(--grain)}
+  .price-tag{
+    margin-top:34px;
+    padding:34px 22px 30px;
+    text-align:center;
+    background:var(--paper);
+    border:1px solid var(--beni);
+    box-shadow:inset 0 0 0 4px var(--paper), inset 0 0 0 5px var(--kin-soft);
+  }
+  .price-tag .name{font-family:var(--mincho);font-weight:700;font-size:18px;letter-spacing:.16em}
+  .price-tag .yen{
+    margin-top:10px;
+    font-family:var(--mincho);font-weight:800;
+    font-size:24px;line-height:1.4;letter-spacing:.06em;color:var(--beni);
+  }
+  .price-tag .yen small{font-size:13px;font-weight:600;letter-spacing:.06em;color:var(--sumi-soft);margin-left:4px}
+  .price-tag .desc{margin-top:14px;font-size:15px;line-height:1.9}
+  .price-tag .btn{margin-top:26px}
+  .once{
+    margin-top:28px;
+    padding:18px 20px;
+    font-size:14.5px;line-height:1.95;
+    background:rgba(255,253,249,.7);
+    border-left:3px solid var(--kin);
+  }
+
+  /* ───────── 名付け ───────── */
+  .naming{background:var(--blush);background-image:var(--grain)}
+  .naming .kinds{
+    margin-top:26px !important;
+    font-family:var(--mincho);font-weight:700;
+    font-size:clamp(17px,4.6vw,19px);line-height:2;letter-spacing:.08em;
+  }
+  .naming .btn{margin-top:28px}
+
+  /* ───────── 流れ ───────── */
+  .flow{list-style:none;margin-top:32px;counter-reset:step}
+  .flow li{
+    position:relative;
+    padding:0 0 28px 58px;
+  }
+  .flow li::before{
+    content:attr(data-n);
+    position:absolute;left:0;top:-2px;
+    width:40px;height:40px;
+    display:grid;place-items:center;
+    font-family:var(--mincho);font-weight:700;font-size:18px;
+    color:var(--beni);
+    border:1px solid var(--beni);
+    border-radius:50%;
+    background:var(--paper);
+  }
+  .flow li::after{
+    content:"";position:absolute;left:20px;top:42px;bottom:4px;
+    width:1px;background:var(--kin-soft);
+  }
+  .flow li:last-child{padding-bottom:0}
+  .flow li:last-child::after{display:none}
+  .flow h3{font-family:var(--mincho);font-weight:700;font-size:17.5px;line-height:1.7;letter-spacing:.06em}
+  .flow p{font-size:15px;line-height:1.9;color:var(--sumi-soft);margin-top:2px}
+  .apply{margin-top:48px}
+
+
+  /* ───────── フッター ───────── */
+  footer{
+    background:var(--sumi);
+    color:#EFE6E1;
+    padding:56px 0 calc(40px + env(safe-area-inset-bottom,0px));
+    text-align:center;
+  }
+  footer .to-top-text{font-size:14.5px;line-height:1.9;color:#E3D6D0}
+  footer .to-top{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:100%;min-height:54px;margin-top:18px;padding:12px 22px;
+    font-family:var(--mincho);font-weight:700;font-size:16px;letter-spacing:.08em;
+    color:var(--sumi);background:#F3EAD9;
+    border:1px solid var(--kin-soft);border-radius:3px;
+    text-decoration:none;
+    transition:background-color .2s ease;
+  }
+  footer .to-top:hover{background:#FFF6E6}
+  footer .to-top-note{margin-top:10px;font-size:12.5px;line-height:1.8;color:#B9ABA6}
+  footer .copy{margin-top:40px;font-size:12px;letter-spacing:.14em;color:#A89A96}
+
+  @media (min-width:760px){
+    .sec{padding:120px 0}
+    .hero{padding-top:calc(env(safe-area-inset-top,0px) + 64px)}
+    .cord{height:200px;margin-top:34px}
+    .trial-box{padding:30px 30px 26px}
+    .fuda{width:88px}
+    .fuda-kana{font-size:40px}
+    .fuda-scroll{width:min(100vw - 48px, 1000px);margin-left:50%;transform:translateX(-50%);padding-inline:0}
+  }
+</style>
+</head>
+<body>
+
+<!-- ヒーロー：熨斗紙のように、水引の下に名前の言葉を -->
+<header class="hero">
+  <h1>ことたま名前鑑定</h1>
+  <p class="hero-sub"><span class="ph">読み解かれる、あなたの本質</span><br><span class="ph">名前のひらがなの音から</span></p>
+
+  <div class="cord" aria-hidden="true">
+    <span class="cord-band"></span>
+    <svg class="bow" viewBox="-110 -90 220 180">
+      <defs>
+        <path id="tailL" d="M -4 4 C -14 26, -28 52, -52 80"/>
+        <path id="tailR" d="M 4 4 C 14 26, 28 52, 52 80"/>
+        <path id="loopL" d="M 0 0 C -16 -36, -74 -50, -90 -18 C -101 6, -56 22, 0 0"/>
+        <path id="loopR" d="M 0 0 C 16 -36, 74 -50, 90 -18 C 101 6, 56 22, 0 0"/>
+      </defs>
+      <g>
+        <use href="#tailL" class="k1"/><use href="#tailL" class="k2"/><use href="#tailL" class="k3"/><use href="#tailL" class="k4"/>
+        <use href="#tailR" class="k1"/><use href="#tailR" class="k2"/><use href="#tailR" class="k3"/><use href="#tailR" class="k4"/>
+        <use href="#loopL" class="k1"/><use href="#loopL" class="k2"/><use href="#loopL" class="k3"/><use href="#loopL" class="k4"/>
+        <use href="#loopR" class="k1"/><use href="#loopR" class="k2"/><use href="#loopR" class="k3"/><use href="#loopR" class="k4"/>
+        <rect class="knot" x="-12" y="-13" width="24" height="26" rx="6"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="hero-copy-box">
+    <p class="hero-copy"><span>名前は、</span><span>あなたが人生で初めて</span><span>与えられたプレゼント。</span></p>
+  </div>
+</header>
+
+<main>
+
+  <!-- 体験版 -->
+  <section class="sec trial" id="trial" aria-labelledby="trial-title">
+    <div class="wrap">
+      <h2 id="trial-title"><span class="ph">あなたの名前の音、</span><span class="ph">少しだけ教えます</span></h2>
+      <p class="lead">日本語には、一音一音に意味があります。<br>名前をひらがなで入れてみてください。<br>あなたの名前の音が持つ意味の一部が、表示されます。</p>
+
+      <div class="trial-box">
+        <label for="nameInput">お名前（ひらがな）</label>
+        <div class="trial-row">
+          <input id="nameInput" type="text" placeholder="例：やまだはなこ" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="20" lang="ja">
+          <button id="readBtn" class="btn" type="button">知ってみる</button>
+        </div>
+        <p class="trial-hint">※漢字だと表示されないので、ひらがなでご入力ください。</p>
+        <p id="trialError" class="trial-error" role="alert"></p>
+      </div>
+
+      <div id="result" class="result" hidden>
+        <p class="result-name"><small>音の意味</small><span id="resultName"></span></p>
+        <div class="fuda-scroll" tabindex="0" aria-label="それぞれの音の意味">
+          <ol class="fuda-row" id="fudaRow"></ol>
+        </div>
+        <p class="fuda-legend" id="fudaLegend"></p>
+        <div class="result-next">
+          <p>ここに出ているのは、それぞれの音が持つ意味の、ほんの一部です。</p>
+          <p>本編の名前鑑定では、一音ずつの詳しい性格や気質に加えて、どんな仕事が向いているのか、より深い部分にどんな傾向があるのかまで読み解いてお伝えします。</p>
+          <a class="btn btn-ghost btn-wide" href="#honpen">本編でわかることを見る</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- はじまり -->
+  <section class="sec story" aria-labelledby="story-title">
+    <div class="wrap">
+      <h2 id="story-title">名前鑑定が生まれるまで</h2>
+      <div class="lead">
+        <p>名前鑑定は、わたしが8年前に作りはじめたものです。</p>
+        <p>はじまりは、「言霊（ことたま）」という言葉に出会ったことでした。<br>日本では昔から、言葉には力が宿ると言われてきました。正しくは、日本語の一音一音に、実はとても大きな意味と力がある。そのことを、わたしは知りました。</p>
+        <p>わたしは幼少期から、人と違う自分の名前が嫌いでした。<br>嫌いだったからこそ、名前に、そして音に、興味が湧いたのだと思います。</p>
+        <p>調べていくうちに、さまざまな情報が手元に集まり、そのすべてを実践してきました。</p>
+        <p>先人たちが残してきた検証結果やデータ、たくさんの知見なども組み合わせて、8年間磨き続けた結果、生まれたのがこの名前鑑定です。</p>
+        <p class="big"><span class="ph">これまでに検証してきたデータは、</span><span class="ph">10万件を超えています。</span></p>
+        <p>わたしひとりの力では、できませんでした。たくさんの方々のお力があってこそ、ここまで来ることができました。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 想い -->
+  <section class="sec message" aria-label="名前鑑定に込めた想い">
+    <div class="wrap">
+      <p><span class="ph">自分自身を知ること。</span><br><span class="ph">それは、自分のことを</span><span class="ph">もっと好きになる</span><span class="ph">ということでもあります。</span></p>
+      <p class="gift"><span class="ph">名前は、</span><span class="ph">あなたが人生で初めて</span><br><span class="ph">ご両親からいただいた、</span><br><span class="ph">誕生日プレゼントです。</span></p>
+      <p><span class="ph">人生で初めて、</span><span class="ph">誰かから与えられたもの。</span><br><span class="ph">それが名前です。</span></p>
+      <p><span class="ph">名前には、</span><span class="ph">とても大きな力と意味があります。</span><br><span class="ph">だからこそ、大切にしてほしい。</span><br><span class="ph">そんな想いを込めて、</span><span class="ph">鑑定をさせていただいています。</span></p>
+      <p><span class="ph">名前を知り、</span><span class="ph">自分を知ることは、</span><br><span class="ph">人生をより豊かに、</span><span class="ph">心地よく過ごしていける、</span><br><span class="ph">そんなきっかけに</span><span class="ph">なることです。</span></p>
+      <p><span class="ph">ご縁ある方に届くなら、</span><span class="ph">嬉しいです。</span></p>
+      <p class="sign">ケビン</p>
+    </div>
+  </section>
+
+  <!-- 本編 -->
+  <section class="sec honpen" id="honpen" aria-labelledby="honpen-title">
+    <div class="wrap">
+      <h2 id="honpen-title"><span class="ph">本編の名前鑑定で</span><span class="ph">わかること</span></h2>
+      <p class="lead">体験版でお見せしているのは、20分の1程度の、ほんの一部です。本編では、あなたの名前に込められた意味を、深いところまですべて読み解いていきます。</p>
+      <ul class="points">
+        <li>
+          <h3>一音ずつの、詳しい性格と気質</h3>
+          <p>名前に含まれるすべての音について、その音が持つ長所、つまずきやすいところ、これからの課題まで、詳しくお伝えします。</p>
+        </li>
+        <li>
+          <h3>向いている仕事と、社会での役割</h3>
+          <p>名前の音を読み解くと、どんな仕事や働き方が合っていて、社会の中でどんな役割を担いやすいのかがわかります。</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 料金 -->
+  <section class="sec price" aria-labelledby="price-title">
+    <div class="wrap">
+      <h2 id="price-title">料金</h2>
+      <div class="price-tag">
+        <p class="name">名前鑑定</p>
+        <p class="yen">33,000円<small>（税込）</small></p>
+        <p class="desc">鑑定の結果は、わかりやすく資料にまとめてお届けします。<br>90分から120分のオンライン（Zoom）にて、解説と資料のお渡しをさせていただきます。</p>
+        <a class="btn btn-wide" href="https://lin.ee/PpJkFNk" target="_blank" rel="noopener">名前鑑定を申し込む</a>
+        <p class="btn-note">連絡用のLINE公式に移動します。<br>追加したら「名前鑑定希望」と送ってください。</p>
+      </div>
+      <p class="once">名前鑑定は、基本的にお一人様一回の鑑定です。ご結婚などを除けば、名前が変わることはあまりありません。一度きりの鑑定だからこそ、一度でしっかりお届けできるよう、ボリュームのある内容をお渡ししています。</p>
+    </div>
+  </section>
+
+  <!-- 名付け -->
+  <section class="sec naming" aria-labelledby="naming-title">
+    <div class="wrap">
+      <h2 id="naming-title"><span class="ph">名付けのご相談も、</span><span class="ph">お受けしています</span></h2>
+      <p class="kinds"><span class="ph">赤ちゃんの名前、</span><span class="ph">芸名、</span><span class="ph">会社名、</span><span class="ph">イベント名など</span></p>
+      <p class="lead">これまでも、たくさんの名付けのご依頼をお受けしてきました。今も、ご縁のある方からのご依頼をお受けしています。</p>
+      <p>内容によって料金が変わりますので、ご希望の方は、まずは直接ご相談ください。</p>
+      <a class="btn btn-ghost btn-wide" href="https://lin.ee/PpJkFNk" target="_blank" rel="noopener">名付けについて相談する</a>
+      <p class="btn-note">連絡用のLINE公式に移動します。<br>追加したら「名付けの相談」と送ってください。</p>
+    </div>
+  </section>
+
+  <!-- 流れ -->
+  <section class="sec" aria-labelledby="flow-title">
+    <div class="wrap">
+      <h2 id="flow-title">お申し込みの流れ</h2>
+      <ol class="flow">
+        <li data-n="一">
+          <h3>LINE公式を追加する</h3>
+          <p>下のボタンから、連絡用のLINE公式アカウントを追加してください。</p>
+        </li>
+        <li data-n="二">
+          <h3>「名前鑑定希望」と送る</h3>
+          <p>追加したら、そのままメッセージを送ってください。</p>
+        </li>
+        <li data-n="三">
+          <h3>ご案内が届く</h3>
+          <p>鑑定に必要なことと、お支払いについてご案内します。</p>
+        </li>
+        <li data-n="四">
+          <h3>解説と資料のお渡し</h3>
+          <p>ご入金の確認後に鑑定を行い、90分から120分のオンライン（Zoom）にて、解説と資料のお渡しをさせていただきます。</p>
+        </li>
+      </ol>
+
+      <div class="apply">
+        <a class="btn btn-wide" href="https://lin.ee/PpJkFNk" target="_blank" rel="noopener">名前鑑定を申し込む</a>
+        <p class="btn-note">連絡用のLINE公式に移動します。<br>追加したら「名前鑑定希望」と送ってください。</p>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p class="to-top-text">名前鑑定のほかにも、<br>セッションなどを行っています。</p>
+    <a class="to-top" href="https://369kelvin369.github.io/">ケビンのほかのメニューを見る</a>
+    <p class="to-top-note">ケビンのプロフィールページに移動します。<br>ほかのメニューは、そちらから見ることができます。</p>
+    <p class="copy">© ことたま名前鑑定</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // 体験版用：各音の意味のうち、最初の二つだけを収録
+  var DATA = {"あ":["好奇心旺盛","好きなことに全力"],"か":["無自覚な努力家","度胸と行動力がある"],"さ":["束縛が嫌い","さみしがり"],"た":["行動力がある","頼りになる"],"な":["安心感を求める","思いやりがある"],"は":["楽天的","人の繋がりを大切にする"],"ま":["正直でハッキリ","決断力がある"],"や":["フレンドリー","ひらめきの才能"],"ら":["陽気で前向き","面倒見がいい"],"わ":["バランスを大事にする","縁の下の力持ち"],"い":["楽しいことが好き","短期集中型"],"き":["集中力が高い","学ぶのが好き"],"し":["要点をまとめるのが上手","仕事好き"],"ち":["好きなものに全力","責任感が強い"],"に":["柔軟性が高い","個性的でユニーク"],"ひ":["個性を大切にする","負けず嫌い"],"み":["楽しいことが好き","人を喜ばせる"],"り":["自分なりのセンスとこだわり","根は真面目"],"う":["思いやりがある","学び好き"],"く":["観察が趣味","集中力が高い"],"す":["ひらめき力","状況判断が早い"],"つ":["考えるのが好き","ロジカル"],"ぬ":["職人肌","整理が得意"],"ふ":["のんびり屋","考えるのが好き"],"む":["集中力がすごい","分析力が高い"],"ゆ":["柔軟性が高い","言葉に力がある"],"る":["心地よさを大切にする","好きなものはシェア"],"を":["人と人を繋ぐ","本質を見抜く"],"え":["純粋で好奇心旺盛","感情表現が豊か"],"け":["おしゃべり好き","面倒見がいい"],"せ":["責任感が強い","猪突猛進"],"て":["職人肌","好きを極める"],"ね":["甘え上手","本質を見抜く"],"へ":["信念がある","行動力がある"],"め":["好きなものはずっと好き","人間観察"],"れ":["頭の回転が速い","空気を読む"],"お":["保守的で堅実","温厚で誠実"],"こ":["真面目で堅実","仕事好き"],"そ":["影の努力家","人に恵まれる"],"と":["鋭い分析力","常識人だけど個性的"],"の":["マイペース","自分ルールがある"],"ほ":["ゆるくて天然","意外な美意識"],"も":["頑張り屋","面倒見がいい"],"よ":["考えるのが好き","探究心がある"],"ろ":["パワフルで行動的","人と人を繋ぐ"],"ん":["優しい","懐が大きい"]};
+
+  // 小さい音 → もとの音（やや弱く出る）
+  var SMALL = {"ぁ":"あ","ぃ":"い","ぅ":"う","ぇ":"え","ぉ":"お","ゃ":"や","ゅ":"ゆ","ょ":"よ","ゎ":"わ","っ":"つ"};
+  // 濁点・丸のつく音 → もとの音（やや強く出る）
+  var VOICED = {"が":"か","ぎ":"き","ぐ":"く","げ":"け","ご":"こ","ざ":"さ","じ":"し","ず":"す","ぜ":"せ","ぞ":"そ","だ":"た","ぢ":"ち","づ":"つ","で":"て","ど":"と","ば":"は","び":"ひ","ぶ":"ふ","べ":"へ","ぼ":"ほ","ぱ":"は","ぴ":"ひ","ぷ":"ふ","ぺ":"へ","ぽ":"ほ","ゔ":"う"};
+
+  var input = document.getElementById("nameInput");
+  var btn = document.getElementById("readBtn");
+  var errorEl = document.getElementById("trialError");
+  var result = document.getElementById("result");
+  var nameEl = document.getElementById("resultName");
+  var row = document.getElementById("fudaRow");
+  var legend = document.getElementById("fudaLegend");
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function toHiragana(s){
+    return s.replace(/[\u30A1-\u30F6]/g, function(c){ return String.fromCharCode(c.charCodeAt(0) - 0x60); });
+  }
+
+  function readName(raw){
+    var s = toHiragana((raw || "").normalize("NFKC")).replace(/[\s\u3000・･]/g, "");
+    if (!s) return { error: "お名前をひらがなでご入力ください。" };
+    if (/[^\u3041-\u3096ー〜～]/.test(s)) return { error: "漢字や英字だと表示されないので、ひらがなでご入力ください。" };
+
+    var seen = {}, sounds = [], hasStrong = false, hasWeak = false;
+    for (var i = 0; i < s.length; i++){
+      var ch = s.charAt(i), base = ch, kind = "";
+      if (ch === "ー" || ch === "〜" || ch === "～") continue;
+      if (SMALL[ch]) { base = SMALL[ch]; kind = "weak"; }
+      else if (VOICED[ch]) { base = VOICED[ch]; kind = "strong"; }
+      if (!DATA[base] || seen[base]) continue;
+      seen[base] = true;
+      if (kind === "strong") hasStrong = true;
+      if (kind === "weak") hasWeak = true;
+      sounds.push({ shown: ch, base: base, kind: kind });
+    }
+    if (!sounds.length) return { error: "読み取れる音が見つかりませんでした。ひらがなでご入力ください。" };
+    return { name: s.replace(/[〜～]/g, ""), sounds: sounds, hasStrong: hasStrong, hasWeak: hasWeak };
+  }
+
+  function el(tag, cls, text){
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+
+  function render(){
+    var r = readName(input.value);
+    if (r.error){
+      errorEl.textContent = r.error;
+      return;
+    }
+    errorEl.textContent = "";
+    nameEl.textContent = r.name;
+    row.textContent = "";
+
+    r.sounds.forEach(function(snd, idx){
+      var li = el("li", "fuda");
+      li.style.setProperty("--i", idx);
+      li.appendChild(el("span", "fuda-kana", snd.shown));
+      li.appendChild(el("span", "fuda-mark", snd.kind === "strong" ? "強めに出る" : snd.kind === "weak" ? "弱めに出る" : ""));
+      var words = el("span", "fuda-words");
+      DATA[snd.base].forEach(function(w){ words.appendChild(el("span", null, w)); });
+      li.appendChild(words);
+      li.setAttribute("aria-label", snd.shown + "：" + DATA[snd.base].join("、"));
+      row.appendChild(li);
+    });
+
+    var notes = [];
+    if (r.hasStrong) notes.push("濁点や丸がつく音（が・ぱ など）は、もとの音の意味がやや強く出ます。");
+    if (r.hasWeak) notes.push("小さい音（ゃ・っ など）は、もとの音の意味がやや弱く出ます。");
+    legend.textContent = notes.join("");
+
+    result.hidden = false;
+    input.blur();
+    result.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+  }
+
+  btn.addEventListener("click", render);
+  input.addEventListener("keydown", function(e){
+    if (e.key === "Enter" && !e.isComposing && e.keyCode !== 229){
+      e.preventDefault();
+      render();
+    }
+  });
+  input.addEventListener("input", function(){ if (errorEl.textContent) errorEl.textContent = ""; });
+})();
+</script>
+</body>
+</html>
