@@ -73,6 +73,8 @@
     transition:background-color .2s ease;
   }
   .jump:hover{background:rgba(255,248,236,.85)}
+  .jumps{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-bottom:26px}
+  .jumps .jump{margin-bottom:0}
   .jump svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
   .hero .role{font-size:13px;line-height:1.9;letter-spacing:.16em;font-weight:700;opacity:.8}
   .hero .role .sep{margin:0 .5em;opacity:.6}
@@ -312,6 +314,36 @@
   .btn:hover{transform:translateY(2px);box-shadow:0 4px 0 #C24B1B}
   .btn-note{margin-top:14px !important;font-size:13px;line-height:1.8;color:var(--ink-soft)}
 
+  /* ───────── プレゼント企画 ───────── */
+  .gift{
+    background:linear-gradient(180deg,#FFEBD6 0%,#FFDDB5 100%);
+    padding:88px 0 96px;
+    border-top:1px dashed #E9B98D;
+  }
+  .gift-label{
+    display:inline-block;
+    font-size:13px;font-weight:700;letter-spacing:.2em;
+    color:#FFF8F0;background:var(--dawn);
+    padding:2px 14px;border-radius:999px;
+  }
+  .gift h2{
+    margin-top:16px;
+    font-family:var(--display);font-weight:700;
+    font-size:clamp(23px,6.2vw,30px);line-height:1.6;letter-spacing:.06em;
+  }
+  .gift .intro{margin-top:18px}
+  .gift .offers{margin-top:32px}
+  .gift .offer{border-color:#F0B987}
+  .gift .offer-go{grid-row:1 / span 3}
+  .offer-badge{
+    grid-column:1;justify-self:start;
+    font-size:12.5px;font-weight:700;letter-spacing:.08em;line-height:1.7;
+    color:#B8461B;background:#FFF1E3;
+    border:1px solid #F3CBA6;border-radius:999px;
+    padding:1px 12px;
+  }
+  .offer.is-gift-kakusei .offer-go{background:#C24B1B}
+
   /* ───────── フッター ───────── */
   footer{
     background:var(--night);
@@ -332,13 +364,17 @@
     .chapter{padding-left:44px}
     .turn{padding-top:72px}
     .present,.menu{padding-top:120px}
+    .gift{padding-top:110px}
   }
 </style>
 </head>
 <body>
 
 <header class="hero">
-  <a class="jump" href="#menu">わたしのしていることを見る<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
+  <div class="jumps">
+    <a class="jump" href="#menu">わたしのしていることを見る<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
+    <a class="jump" href="#present">プレゼント企画を見る<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
+  </div>
   <p class="role"><span class="ph">引き寄せ実践者・指導者</span><span class="role-sub">スピリチュアル探究者</span></p>
   <h1>ケビン</h1>
   <div class="sun">
@@ -508,6 +544,34 @@
         <a class="btn" href="https://lin.ee/PpJkFNk" target="_blank" rel="noopener">LINEでメッセージを送る</a>
         <p class="btn-note">連絡用のLINE公式に移動します。</p>
       </div>
+    </div>
+  </section>
+
+  <!-- プレゼント企画 -->
+  <section class="gift" id="present" aria-labelledby="present-title">
+    <div class="wrap">
+      <p class="gift-label">プレゼント企画</p>
+      <h2 id="present-title"><span class="ph">今だけの、</span><span class="ph">2つのプレゼント</span></h2>
+      <p class="intro"><span class="ph">今、2つのプレゼントを</span><span class="ph">受け付けています。</span></p>
+
+      <ul class="offers">
+        <li>
+          <a class="offer is-agastya" href="https://369kelvin369.github.io/index/#present">
+            <span class="offer-badge">11月30日まで</span>
+            <span class="offer-name">魂の計画書「過去編」</span>
+            <span class="offer-desc">アガスティアの星図から、ここ3年の流れと、今のあなたに必要なメッセージを紐解いて、無料でお届けします。</span>
+            <span class="offer-go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></span>
+          </a>
+        </li>
+        <li>
+          <a class="offer is-gift-kakusei" href="https://369kelvin369.github.io/kakusei/kakusei.html">
+            <span class="offer-badge">50名限定</span>
+            <span class="offer-name">魂覚醒セッション</span>
+            <span class="offer-desc">ヒプノ（催眠）と引き寄せのエネルギーワークで、理想の状態を力まずに叶えていく、約60分の無料セッションです。ふだんはご紹介の方限定ですが、ブログを読んでくださっている方も、今だけお受けしています。</span>
+            <span class="offer-go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></span>
+          </a>
+        </li>
+      </ul>
     </div>
   </section>
 
